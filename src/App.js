@@ -37,7 +37,6 @@ class App extends Component {
               />
             }
           </HeaderApp>
-          {/** Root */}
           <Root rute={currentPage} />
         </div>
       </Router>

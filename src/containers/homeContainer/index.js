@@ -1,13 +1,43 @@
 import React, { Component } from "react";
-import styles from "./styles.js";
+import { connect } from "react-redux";
 
 //Components
 //import LoginButtom from "../../components/LoginButton";
+import Modal from "../../components/Modal";
+import LoginForm from "../../components/FormLogin";
+import CtrlSelect from "../../components/CtrlSelect";
 
 class HomeContainer extends Component {
+  state = {
+    logged: true
+  };
+
+  getDataUserLogged = object => {
+    console.log(object);
+  };
+
+  showHiddeModal = () => {
+    const { logged } = this.state;
+    if (logged) {
+      return <p>Bienvenido</p>;
+    }
+    return (
+      <Modal title="Shopping Store">
+        <LoginForm getUserData={this.getDataUserLogged} />
+      </Modal>
+    );
+  };
+
   render() {
-    return <div style={styles.main}>PP</div>;
+    console.log(this.props);
+    return <div>{this.showHiddeModal()}</div>;
   }
 }
 
-export default HomeContainer;
+const mapStateToProps = state => {
+  return {
+    list: state.productsReducer.categories
+  };
+};
+
+export default connect(mapStateToProps)(HomeContainer);

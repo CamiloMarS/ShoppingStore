@@ -1,33 +1,63 @@
 import { makeAsyncActionCreator } from "redux-toolbelt";
-import { fromJS } from "immutable";
 
-const initialState = fromJS({
+const initialState = {
   categories: [],
   products: [],
   fetching: false,
   message: ""
-});
+};
 
 export const getProductsList = makeAsyncActionCreator("GET_PRODUCT"); //Async Action
+export const getCategorysList = makeAsyncActionCreator("GET_CATEGORIES");
 
-const productReducer = (state = initialState, action) => {
+const actionProductsReducer = (state = initialState, action) => {
   switch (action.type) {
     case getProductsList.TYPE: {
-      return state.merge({ fetching: true, message: "Loading list" });
+      return {
+        ...state,
+        fetching: true,
+        message: "Loading Products"
+      };
     }
     case getProductsList.success.TYPE: {
-      return state.merge({
-        categories: action.payload,
+      return {
+        ...state,
+        products: action.payload,
         fetching: false,
-        message: "Get categories products successful"
-      });
+        message: "Success"
+      };
     }
     case getProductsList.failure.TYPE: {
-      return state.merge({ fetching: false, message: action.payload });
+      return {
+        ...state,
+        message: "Failure to load products"
+      };
+    }
+    //Categories
+    case getCategorysList.TYPE: {
+      return Object.assign({}, state, {
+        categories: [],
+        fetching: true,
+        message: "Loading"
+      });
+    }
+    case getCategorysList.success.TYPE: {
+      return Object.assign({}, state, {
+        categories: action.payload,
+        fetching: false,
+        message: "Completed"
+      });
+    }
+    case getCategorysList.failure.TYPE: {
+      return Object.assign({}, state, {
+        categories: [],
+        fetching: false,
+        message: "Failure Request"
+      });
     }
     default:
       return initialState;
   }
 };
 
-export default productReducer;
+export default actionProductsReducer;

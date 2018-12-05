@@ -1,19 +1,26 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 
 //Components
 //import LoginButtom from "../../components/LoginButton";
 import Modal from "../../components/Modal";
 import LoginForm from "../../components/FormLogin";
-import CtrlSelect from "../../components/CtrlSelect";
+import { watchSession, singInWithEmailAndPass } from "../../settings/firebase";
 
 class HomeContainer extends Component {
   state = {
-    logged: true
+    logged: false
   };
 
   getDataUserLogged = object => {
-    console.log(object);
+    const { user, password } = object;
+    //Login
+    try {
+      singInWithEmailAndPass(user, password);
+      //this.setState({ logged: true });
+    } catch (err) {
+      console.log("Login => ", err);
+    }
+    watchSession();
   };
 
   showHiddeModal = () => {
@@ -29,15 +36,8 @@ class HomeContainer extends Component {
   };
 
   render() {
-    console.log(this.props);
     return <div>{this.showHiddeModal()}</div>;
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    list: state.productsReducer.categories
-  };
-};
-
-export default connect(mapStateToProps)(HomeContainer);
+export default HomeContainer;

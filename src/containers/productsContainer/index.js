@@ -2,17 +2,62 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 //Components
-import Products from "../../components/Product";
+import ModalStatus from "../../components/ModalStatus";
+import { bindActionCreators } from "redux";
+import {
+  getProductsList,
+  getCategorysList
+} from "../../reducers/ProductsReducer";
+import CtrlSelect from "../../components/CtrlSelect";
+import IconLoading from "../../components/Icon";
+import Panel from "../../components/Panel";
+import { classes } from "./containerStyles";
 
 class ProductsContainer extends Component {
+  state = {
+    listProducts: []
+  };
+
+  componentDidMount() {
+    this.props.getCategories();
+    this.props.getProducts();
+  }
+
+  getProductsAndCategories = event => {
+    const { products } = this.props;
+    const { value } = event.target;
+    const tmpList = [];
+    //Property exists ?
+    if (products.hasOwnProperty(value)) {
+      for (let i in products[value]) {
+        tmpList.push(products[value][i]);
+      }
+      this.setState({ listProducts: tmpList });
+    }
+  };
+
   render() {
+    const { loading } = this.props;
+
     return (
       <div>
-        <Products
-          data={{ image: "#", name: "Sudadera", mark: "Ferrato", cost: 500 }}
+        <Panel title="Opciones" classes={classes}>
+          <div>
+            Categoria:{" "}
+            <CtrlSelect
+              options={this.props.categories}
+              callback={this.getProductsAndCategories}
+            />
+          </div>
+        </Panel>
+
+        <ModalStatus
+          active={loading}
+          icon={<IconLoading active={loading} />}
+          information="Cargando la lista de los productos."
         >
-          <p>Product</p>
-        </Products>
+          <h3>Cargando Productos</h3>
+        </ModalStatus>
       </div>
     );
   }
@@ -20,10 +65,21 @@ class ProductsContainer extends Component {
 
 const mapStateToProps = state => {
   return {
-    productList: state.productsReducer.products,
-    loadingProducts: state.productsReducer.fetching,
-    messageProducts: state.productsReducer.message
+    products: state.actionProductsReducer.products,
+    categories: state.actionProductsReducer.categories,
+    loading: state.actionProductsReducer.fetching,
+    message: state.actionProductsReducer.message
   };
 };
 
-export default connect(mapStateToProps)(ProductsContainer);
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    { getProducts: getProductsList, getCategories: getCategorysList },
+    dispatch
+  );
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProductsContainer);

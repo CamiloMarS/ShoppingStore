@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
+import config from "./settings/firebase";
 
 //import reducer here
 import * as reducers from "./reducers/index";
@@ -14,8 +15,7 @@ import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
 
 //Import the sagas created
-import runProductsSaga from "./sagas/productsSagas";
-import { getProductsList } from "./reducers/ProductsReducer";
+import * as sagas from "./sagas/index";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -29,9 +29,9 @@ const store = createStore(
 );
 
 //initializar saga
-sagaMiddleware.run(runProductsSaga);
-
-store.dispatch(getProductsList());
+for (let item in sagas) {
+  sagaMiddleware.run(sagas[item]);
+}
 
 ReactDOM.render(
   <Provider store={store}>
@@ -39,5 +39,7 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
+
+window.firebase.initializeApp(config);
 
 serviceWorker.unregister();

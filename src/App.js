@@ -10,12 +10,20 @@ import MenuLinks from "./components/MenuLinks/Menu";
 import Root from "./Route/index";
 
 import { setCurrentPage } from "./reducers/currentPage";
+import { watchSession } from "./settings/firebase";
 
 //Settings
 import MenuItems from "./settings/index";
 import { bindActionCreators } from "redux";
 
 class App extends Component {
+  componentDidMount() {
+    try {
+      watchSession();
+    } catch (error) {
+      console.log(error);
+    }
+  }
   changePage = value => {
     this.props.pageToChange(value);
   };

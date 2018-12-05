@@ -25,8 +25,7 @@ class LoginForm extends React.PureComponent {
         <h3 style={classes.title}>Iniciar sessión</h3>
         <Button color="red" text="Gmail" action={null} />
         <Button color="blue" text="Facebook" action={null} />
-
-        <div style={{ borderTop: "1px groove #000", paddingTop: "10px" }}>
+        <div style={{ borderTop: "1px groove #000" }}>
           <span style={classes.txtControls}>Usuario</span>
           <input
             style={classes.inputs}

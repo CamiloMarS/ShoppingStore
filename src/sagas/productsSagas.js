@@ -1,18 +1,17 @@
 import { takeLatest, put, call } from "redux-saga/effects";
 import { getProductsList } from "../reducers/ProductsReducer";
-import { getApiCategoryProducts } from "../settings/api";
+import { getProducts } from "../settings/api";
 
-function* tryCategoriesSaga() {
+function* tryProductsSaga() {
   try {
-    const response = yield call(getApiCategoryProducts);
+    const response = yield call(getProducts);
     const { data } = response;
-    yield put({ type: getProductsList.success.TYPE, payload: data });
+    yield put(getProductsList.success(data));
   } catch (error) {
-    //Send Error
-    yield put({ type: getProductsList.failure.TYPE, payload: error });
+    yield put(getProductsList.failure(error));
   }
 }
 
-export default function* runProductsSaga() {
-  yield takeLatest(getProductsList.TYPE, tryCategoriesSaga);
+export default function* runProductSaga() {
+  yield takeLatest(getProductsList.TYPE, tryProductsSaga);
 }

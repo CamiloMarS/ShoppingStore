@@ -25,9 +25,9 @@ const classes = {
     margin: "5px 0"
   },
   inputs: {
-    padding: "25px",
+    padding: "5px !important",
     fontSize: "16px",
-    margin: "5px"
+    margin: "5px !important"
   },
   divisor: {
     margin: "5px 0",
